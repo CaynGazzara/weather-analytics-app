@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "weather-analytics-ui": {
+    "weather-analytics-frontend": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -68,10 +68,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "weather-analytics-ui:build:production"
+              "buildTarget": "weather-analytics-frontend:build:production"
             },
             "development": {
-              "buildTarget": "weather-analytics-ui:build:development"
+              "buildTarget": "weather-analytics-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"

@@ -14,7 +14,7 @@ import {
   providedIn: 'root'
 })
 export class WeatherService {
-  private apiUrl = 'https://localhost:7007/api/weather';
+  private apiUrl = 'https://localhost:7178/api/weather';
 
   constructor(private http: HttpClient) { }
 

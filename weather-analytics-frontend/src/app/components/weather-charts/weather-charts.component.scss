@@ -37,8 +37,8 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   }
 
   h3 {
@@ -53,6 +53,11 @@
   position: relative;
   height: 300px;
   width: 100%;
+  
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
 }
 
 @keyframes spin {
