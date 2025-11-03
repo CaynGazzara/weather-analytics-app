@@ -1,0 +1,23 @@
+<div class="app-container">
+  <header class="app-header">
+    <nav class="navbar">
+      <div class="nav-brand">
+        <h1>🌤️ Weather Analytics</h1>
+      </div>
+      <div class="nav-links">
+        <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+        <a routerLink="/comparison" routerLinkActive="active">Comparar Cidades</a>
+        <a routerLink="/historical" routerLinkActive="active">Dados Históricos</a>
+        <a routerLink="/alerts" routerLinkActive="active">Alertas</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="app-main">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="app-footer">
+    <p>&copy; 2024 Weather Analytics Platform - Desenvolvido com Angular e .NET</p>
+  </footer>
+</div>

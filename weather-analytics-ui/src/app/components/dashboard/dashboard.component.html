@@ -1,0 +1,83 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h1>🌤️ Weather Analytics Platform</h1>
+    <div class="city-selector">
+      <label for="citySelect">Selecione a cidade:</label>
+      <select id="citySelect" [(ngModel)]="selectedCity" (change)="onCityChange()">
+        <option *ngFor="let city of popularCities" [value]="city">{{ city }}</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>Carregando dados climáticos...</p>
+  </div>
+
+  <!-- Current Weather -->
+  <div *ngIf="currentWeather && !isLoading" class="current-weather">
+    <div class="weather-card">
+      <h2>Condições Atuais - {{ currentWeather.city }}</h2>
+      <div class="weather-content">
+        <div class="weather-main">
+          <img [src]="getWeatherIconUrl(currentWeather.icon)" [alt]="currentWeather.description" class="weather-icon">
+          <div class="temperature">
+            <span class="temp">{{ currentWeather.temperature | number:'1.0-0' }}°C</span>
+            <span class="feels-like">Sensação: {{ currentWeather.feelsLike | number:'1.0-0' }}°C</span>
+          </div>
+        </div>
+        <div class="weather-details">
+          <div class="detail-item">
+            <span class="label">Descrição:</span>
+            <span class="value">{{ currentWeather.description }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Umidade:</span>
+            <span class="value">{{ currentWeather.humidity }}%</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Pressão:</span>
+            <span class="value">{{ currentWeather.pressure }} hPa</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Vento:</span>
+            <span class="value">{{ currentWeather.windSpeed | number:'1.1-1' }} m/s {{ currentWeather.windDirection
+              }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alerts -->
+  <div class="alerts-section">
+    <h2>⚠️ Alertas Climáticos</h2>
+    <app-weather-alerts [city]="selectedCity"></app-weather-alerts>
+  </div>
+
+  <!-- City Comparison -->
+  <div *ngIf="comparison" class="comparison-section">
+    <h2>🏙️ Comparação entre Cidades</h2>
+    <div class="comparison-grid">
+      <div *ngFor="let cityData of comparison.citiesData" class="city-card">
+        <h3>{{ cityData.city }}</h3>
+        <div class="city-weather">
+          <span class="city-temp">{{ cityData.temperature | number:'1.0-0' }}°C</span>
+          <span class="city-desc">{{ cityData.description }}</span>
+        </div>
+        <div class="city-details">
+          <div>💧 {{ cityData.humidity }}%</div>
+          <div>💨 {{ cityData.windSpeed | number:'1.1-1' }} m/s</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="charts-section">
+    <h2>📊 Análises e Gráficos</h2>
+    <app-weather-charts [city]="selectedCity"></app-weather-charts>
+  </div>
+</div>

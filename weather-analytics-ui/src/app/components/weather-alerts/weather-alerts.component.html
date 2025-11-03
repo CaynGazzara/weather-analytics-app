@@ -1,0 +1,56 @@
+<div class="alerts-container">
+  <div class="alerts-header">
+    <h2>⚠️ Alertas Climáticos - {{ city }}</h2>
+    <button class="refresh-btn" (click)="loadAlerts()" [disabled]="isLoading">
+      {{ isLoading ? '🔄' : '🔄' }} Atualizar
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>Carregando alertas...</p>
+  </div>
+
+  <!-- No Alerts -->
+  <div *ngIf="!isLoading && alerts.length === 0" class="no-alerts">
+    <div class="no-alerts-icon">✅</div>
+    <h3>Nenhum alerta ativo</h3>
+    <p>Não há alertas climáticos para {{ city }} no momento.</p>
+  </div>
+
+  <!-- Alerts Grid -->
+  <div *ngIf="!isLoading && alerts.length > 0" class="alerts-grid">
+    <div *ngFor="let alert of alerts" 
+         class="alert-card" 
+         [class]="getAlertSeverityClass(alert.severity)">
+      <div class="alert-header">
+        <span class="alert-icon">{{ getAlertIcon(alert.type) }}</span>
+        <div class="alert-title">
+          <h3>{{ alert.type }}</h3>
+          <span class="alert-severity" [class]="getAlertSeverityClass(alert.severity) + '-badge'">
+            {{ alert.severity }}
+          </span>
+        </div>
+      </div>
+      
+      <p class="alert-description">{{ alert.description }}</p>
+      
+      <div class="alert-timeline">
+        <div class="timeline-item">
+          <span class="timeline-label">Início:</span>
+          <span class="timeline-value">{{ alert.startTime | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-label">Término:</span>
+          <span class="timeline-value">{{ alert.endTime | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+      </div>
+      
+      <div class="alert-actions">
+        <button class="action-btn details-btn">Ver Detalhes</button>
+        <button class="action-btn share-btn">Compartilhar</button>
+      </div>
+    </div>
+  </div>
+</div>

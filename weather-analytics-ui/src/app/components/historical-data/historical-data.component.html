@@ -1,0 +1,155 @@
+<div class="historical-container">
+  <div class="historical-header">
+    <h1>📊 Dados Históricos</h1>
+    <p>Analise tendências climáticas e dados históricos detalhados</p>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-card">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label for="citySelect">Cidade:</label>
+        <select id="citySelect" [(ngModel)]="selectedCity" (change)="onFiltersChange()">
+          <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="startDate">Data Inicial:</label>
+        <input 
+          type="date" 
+          id="startDate" 
+          [(ngModel)]="startDate" 
+          (change)="onFiltersChange()">
+      </div>
+
+      <div class="filter-group">
+        <label for="endDate">Data Final:</label>
+        <input 
+          type="date" 
+          id="endDate" 
+          [(ngModel)]="endDate" 
+          (change)="onFiltersChange()">
+      </div>
+
+      <div class="filter-group">
+        <label class="checkbox-label">
+          <input 
+            type="checkbox" 
+            [(ngModel)]="showTrends" 
+            (change)="onFiltersChange()">
+          Mostrar Análise de Tendências
+        </label>
+      </div>
+    </div>
+
+    <button class="export-btn" (click)="exportToCSV()" [disabled]="!historicalData.length">
+      📥 Exportar CSV
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>Carregando dados históricos...</p>
+  </div>
+
+  <!-- Statistics -->
+  <div *ngIf="historicalData.length > 0 && !isLoading" class="stats-section">
+    <h2>📈 Estatísticas do Período</h2>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">🌡️</div>
+        <div class="stat-info">
+          <span class="stat-label">Temp. Média</span>
+          <span class="stat-value">{{ getStats()?.avgTemp | number:'1.1-1' }}°C</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-info">
+          <span class="stat-label">Temp. Máxima</span>
+          <span class="stat-value">{{ getStats()?.maxTemp | number:'1.1-1' }}°C</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">❄️</div>
+        <div class="stat-info">
+          <span class="stat-label">Temp. Mínima</span>
+          <span class="stat-value">{{ getStats()?.minTemp | number:'1.1-1' }}°C</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💧</div>
+        <div class="stat-info">
+          <span class="stat-label">Umidade Média</span>
+          <span class="stat-value">{{ getStats()?.avgHumidity | number:'1.0-0' }}%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trends Charts -->
+  <div *ngIf="showTrends && trends && !isLoading" class="trends-section">
+    <h2>📊 Análise de Tendências</h2>
+    <app-weather-charts [city]="selectedCity"></app-weather-charts>
+  </div>
+
+  <!-- Historical Data Table -->
+  <div *ngIf="historicalData.length > 0 && !isLoading" class="data-section">
+    <h2>📋 Dados Detalhados</h2>
+    <div class="table-container">
+      <table class="historical-table">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Temperatura</th>
+            <th>Umidade</th>
+            <th>Pressão</th>
+            <th>Vento</th>
+            <th>Precipitação</th>
+            <th>Condição</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of historicalData.slice(0, 50)"> <!-- Limit to 50 rows for performance -->
+            <td class="date-cell">
+              {{ data.date | date:'dd/MM/yyyy' }}
+            </td>
+            <td>
+              <span class="temperature">{{ data.temperature | number:'1.1-1' }}°C</span>
+            </td>
+            <td>
+              <span class="humidity">{{ data.humidity }}%</span>
+            </td>
+            <td>
+              <span class="pressure">{{ data.pressure }} hPa</span>
+            </td>
+            <td>
+              <span class="wind">{{ data.windSpeed | number:'1.1-1' }} m/s</span>
+            </td>
+            <td>
+              <span class="precipitation" *ngIf="data.precipitation !== undefined">
+                {{ (data.precipitation * 100) | number:'1.0-0' }}%
+              </span>
+              <span class="precipitation" *ngIf="data.precipitation === undefined">-</span>
+            </td>
+            <td>
+              <span class="condition">{{ data.description }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-info">
+      <p>Mostrando {{ historicalData.slice(0, 50).length }} de {{ historicalData.length }} registros</p>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="historicalData.length === 0 && !isLoading" class="empty-state">
+    <div class="empty-icon">📊</div>
+    <h3>Nenhum dado histórico encontrado</h3>
+    <p>Selecione um período diferente ou tente outra cidade</p>
+  </div>
+</div>

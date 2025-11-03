@@ -1,0 +1,136 @@
+<div class="comparison-container">
+  <div class="comparison-header">
+    <h1>🏙️ Comparação de Cidades</h1>
+    <p>Compare condições climáticas entre diferentes cidades em tempo real</p>
+  </div>
+
+  <!-- City Selection -->
+  <div class="city-selection">
+    <h3>Selecione as cidades para comparar:</h3>
+    <div class="cities-grid">
+      <div *ngFor="let city of availableCities" class="city-checkbox">
+        <label>
+          <input 
+            type="checkbox" 
+            [checked]="isCitySelected(city)"
+            (change)="onCitySelectionChange(city, $event)">
+          {{ city }}
+        </label>
+      </div>
+    </div>
+    <button 
+      class="compare-btn" 
+      (click)="compareCities()"
+      [disabled]="selectedCities.length === 0 || isLoading">
+      {{ isLoading ? 'Comparando...' : 'Comparar Cidades' }}
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>Comparando condições climáticas...</p>
+  </div>
+
+  <!-- Comparison Results -->
+  <div *ngIf="comparison && !isLoading" class="comparison-results">
+    <h2>Resultado da Comparação</h2>
+    <p class="comparison-date">
+      Dados de: {{ comparison.comparisonDate | date:'full' }}
+    </p>
+
+    <div class="comparison-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Cidade</th>
+            <th>Temperatura</th>
+            <th>Sensação Térmica</th>
+            <th>Umidade</th>
+            <th>Pressão</th>
+            <th>Vento</th>
+            <th>Condição</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cityData of comparison.citiesData">
+            <td class="city-name">
+              <strong>{{ cityData.city }}</strong>
+              <small *ngIf="cityData.country">, {{ cityData.country }}</small>
+            </td>
+            <td>
+              <span class="temperature" [class]="getTemperatureColor(cityData.temperature)">
+                {{ cityData.temperature | number:'1.1-1' }}°C
+              </span>
+            </td>
+            <td>
+              <span class="feels-like">
+                {{ cityData.feelsLike | number:'1.1-1' }}°C
+              </span>
+            </td>
+            <td>
+              <span class="humidity" [class]="getHumidityColor(cityData.humidity)">
+                {{ cityData.humidity }}%
+              </span>
+            </td>
+            <td>
+              <span class="pressure">
+                {{ cityData.pressure }} hPa
+              </span>
+            </td>
+            <td>
+              <span class="wind">
+                {{ cityData.windSpeed | number:'1.1-1' }} m/s
+                <small>{{ cityData.windDirection }}</small>
+              </span>
+            </td>
+            <td>
+              <div class="condition">
+                <img 
+                  [src]="'https://openweathermap.org/img/w/' + cityData.icon + '.png'" 
+                  [alt]="cityData.description"
+                  class="condition-icon">
+                <span class="condition-desc">{{ cityData.description }}</span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+      <div class="summary-card">
+        <h4>🌡️ Mais Quente</h4>
+        <p class="summary-value">
+          {{ getHottestCity()?.city }} - {{ getHottestCity()?.temperature | number:'1.1-1' }}°C
+        </p>
+      </div>
+      <div class="summary-card">
+        <h4>❄️ Mais Frio</h4>
+        <p class="summary-value">
+          {{ getColdestCity()?.city }} - {{ getColdestCity()?.temperature | number:'1.1-1' }}°C
+        </p>
+      </div>
+      <div class="summary-card">
+        <h4>💧 Mais Úmido</h4>
+        <p class="summary-value">
+          {{ getMostHumidCity()?.city }} - {{ getMostHumidCity()?.humidity }}%
+        </p>
+      </div>
+      <div class="summary-card">
+        <h4>💨 Mais Vento</h4>
+        <p class="summary-value">
+          {{ getWindiestCity()?.city }} - {{ getWindiestCity()?.windSpeed | number:'1.1-1' }} m/s
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!comparison && !isLoading" class="empty-state">
+    <div class="empty-icon">🏙️</div>
+    <h3>Selecione cidades para comparar</h3>
+    <p>Escolha pelo menos uma cidade da lista acima para ver a comparação</p>
+  </div>
+</div>
